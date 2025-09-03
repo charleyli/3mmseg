@@ -4,7 +4,6 @@ from mmengine.model import revert_sync_batchnorm
 
 from mmseg.apis import inference_model, init_model, show_result_pyplot
 
-
 def main():
     parser = ArgumentParser()
     parser.add_argument('img', help='Image file')
