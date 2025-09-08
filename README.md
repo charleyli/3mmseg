@@ -12,9 +12,9 @@ https://pan.baidu.com/s/1SgoM8-_JIMJbXyQ9i7eDtw(密码是lala)
 
 2 数据处理
 ```
-https://mmsegmentation.readthedocs.io/zh-cn/0.x/dataset_prepare.html
+https://mmsegmentation.readthedocs.io/zh-cn/main/user_guides/2_dataset_prepare.html
 ```
-最后的数据集的结构如下：
+最后的数据集的结构如下,见帮助文档：
 mmsegmentation
 ├── mmseg
 ├── tools
