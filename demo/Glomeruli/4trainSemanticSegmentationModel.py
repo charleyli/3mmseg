@@ -20,6 +20,8 @@ ann_dir = 'masks'
 classes = ('background', 'glomeruili')
 palette = [[128, 128, 128], [151, 189, 8]]
 
+
+# 修改数据集类（指定图像扩展名）
 @DATASETS.register_module()
 class StanfordBackgroundDataset(BaseSegDataset):
   METAINFO = dict(classes = classes, palette = palette)
