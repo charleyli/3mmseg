@@ -21,11 +21,11 @@ data_preprocessor = dict(
         57.375,
     ],
     type='SegDataPreProcessor')
-data_root = 'Glomeruli-dataset'
+data_root = './data/Glomeruli-dataset'
 dataset_type = 'StanfordBackgroundDataset'
 default_hooks = dict(
-    checkpoint=dict(by_epoch=False, interval=400, type='CheckpointHook'),
-    logger=dict(interval=100, log_metric_by_epoch=False, type='LoggerHook'),
+    checkpoint=dict(by_epoch=False, interval=1000.0, type='CheckpointHook'),
+    logger=dict(interval=1000.0, log_metric_by_epoch=False, type='LoggerHook'),
     param_scheduler=dict(type='ParamSchedulerHook'),
     sampler_seed=dict(type='DistSamplerSeedHook'),
     timer=dict(type='IterTimerHook'),
@@ -43,7 +43,7 @@ img_ratios = [
     1.5,
     1.75,
 ]
-load_from = 'pspnet_r50-d8_512x1024_40k_cityscapes_20200605_003338-2966598c.pth'
+load_from = './checkpoint/pspnet_r50-d8_512x1024_40k_cityscapes_20200605_003338-2966598c.pth'
 log_level = 'INFO'
 log_processor = dict(by_epoch=False)
 model = dict(
@@ -149,7 +149,7 @@ test_dataloader = dict(
     dataset=dict(
         ann_file='./splits/val.txt',
         data_prefix=dict(img_path='images', seg_map_path='masks'),
-        data_root='Glomeruli-dataset',
+        data_root='./data/Glomeruli-dataset',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(keep_ratio=True, scale=(
@@ -176,13 +176,14 @@ test_pipeline = [
     dict(type='LoadAnnotations'),
     dict(type='PackSegInputs'),
 ]
-train_cfg = dict(max_iters=800, type='IterBasedTrainLoop', val_interval=400)
+train_cfg = dict(
+    max_iters=10000.0, type='IterBasedTrainLoop', val_interval=1000.0)
 train_dataloader = dict(
     batch_size=8,
     dataset=dict(
         ann_file='./splits/train.txt',
         data_prefix=dict(img_path='images', seg_map_path='masks'),
-        data_root='Glomeruli-dataset',
+        data_root='./data/Glomeruli-dataset',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(type='LoadAnnotations'),
@@ -262,7 +263,7 @@ val_dataloader = dict(
     dataset=dict(
         ann_file='./splits/val.txt',
         data_prefix=dict(img_path='images', seg_map_path='masks'),
-        data_root='Glomeruli-dataset',
+        data_root='./data/Glomeruli-dataset',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(keep_ratio=True, scale=(

@@ -12,7 +12,7 @@ from mmengine.runner import Runner
 from mmseg.utils import register_all_modules
 
 # 数据集图片和标注路径
-data_root = 'Glomeruli-dataset'
+data_root = './data/Glomeruli-dataset'
 img_dir = 'images'
 ann_dir = 'masks'
 
@@ -32,8 +32,9 @@ class StanfordBackgroundDataset(BaseSegDataset):
 文档：
 https://github.com/open-mmlab/mmsegmentation/blob/master/docs/en/tutorials/customize_datasets.md#customize-datasets-by-reorganizing-data
 '''
-cfg = Config.fromfile('./configs/pspnet/pspnet_r50-d8_4xb2-40k_cityscapes-512x1024.py')
 
+# 修改config配置文件
+cfg = Config.fromfile('./configs/pspnet/pspnet_r50-d8_4xb2-40k_cityscapes-512x1024.py')
 cfg.norm_cfg = dict(type='BN', requires_grad=True) # 只使用GPU时，BN取代SyncBN
 cfg.crop_size = (256, 256)
 cfg.model.data_preprocessor.size = cfg.crop_size
@@ -43,13 +44,10 @@ cfg.model.auxiliary_head.norm_cfg = cfg.norm_cfg
 # modify num classes of the model in decode/auxiliary head
 cfg.model.decode_head.num_classes = 2
 cfg.model.auxiliary_head.num_classes = 2
-
 # 修改数据集的 type 和 root
 cfg.dataset_type = 'StanfordBackgroundDataset'
 cfg.data_root = data_root
-
 cfg.train_dataloader.batch_size = 8
-
 cfg.train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations'),
@@ -58,7 +56,6 @@ cfg.train_pipeline = [
     dict(type='RandomFlip', prob=0.5),
     dict(type='PackSegInputs')
 ]
-
 cfg.test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='Resize', scale=(320, 240), keep_ratio=True),
@@ -67,47 +64,49 @@ cfg.test_pipeline = [
     dict(type='LoadAnnotations'),
     dict(type='PackSegInputs')
 ]
-
-
 cfg.train_dataloader.dataset.type = cfg.dataset_type
 cfg.train_dataloader.dataset.data_root = cfg.data_root
 cfg.train_dataloader.dataset.data_prefix = dict(img_path=img_dir, seg_map_path=ann_dir)
 cfg.train_dataloader.dataset.pipeline = cfg.train_pipeline
 cfg.train_dataloader.dataset.ann_file = './splits/train.txt'
-
 cfg.val_dataloader.dataset.type = cfg.dataset_type
 cfg.val_dataloader.dataset.data_root = cfg.data_root
 cfg.val_dataloader.dataset.data_prefix = dict(img_path=img_dir, seg_map_path=ann_dir)
 cfg.val_dataloader.dataset.pipeline = cfg.test_pipeline
 cfg.val_dataloader.dataset.ann_file = './splits/val.txt'
-
 cfg.test_dataloader = cfg.val_dataloader
 
-
 # 载入预训练模型权重
-cfg.load_from = 'pspnet_r50-d8_512x1024_40k_cityscapes_20200605_003338-2966598c.pth'
+cfg.load_from = './checkpoint/pspnet_r50-d8_512x1024_40k_cityscapes_20200605_003338-2966598c.pth'
 
 # 工作目录
 cfg.work_dir = './work_dirs/tutorial'
 
 # 训练迭代次数
-cfg.train_cfg.max_iters = 800
+cfg.train_cfg.max_iters = int(10e3)
 # 评估模型间隔
-cfg.train_cfg.val_interval = 400
+cfg.train_cfg.val_interval = int(1e3)
 # 日志记录间隔
-cfg.default_hooks.logger.interval = 100
+cfg.default_hooks.logger.interval = int(1e3)
 # 模型权重保存间隔
-cfg.default_hooks.checkpoint.interval = 400
+cfg.default_hooks.checkpoint.interval = int(1e3)
 
 # 随机数种子
 cfg['randomness'] = dict(seed=0)
-print(cfg.pretty_text)
 
-cfg.dump('new_cfg.py')
+
+# 可以打印cfg的所有信息，并保存到new_cfg.py中
+# print(cfg.pretty_text)
+cfg.dump('./demo/Glomeruli/new_cfg.py')
 
 
 # register all modules in mmseg into the registries
 # do not init the default scope here because it will be init in the runner
 register_all_modules(init_default_scope=False)
-runner = Runner.from_cfg(cfg)
-runner.train()
+
+
+if __name__ == '__main__':
+    runner = Runner.from_cfg(cfg)
+    runner.train()
+'''
+'''
