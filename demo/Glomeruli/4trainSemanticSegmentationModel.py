@@ -28,9 +28,12 @@ class StanfordBackgroundDataset(BaseSegDataset):
   def __init__(self, **kwargs):
     super().__init__(img_suffix='.png', seg_map_suffix='.png', **kwargs)
 
+
+
 '''
 文档：
 https://github.com/open-mmlab/mmsegmentation/blob/master/docs/en/tutorials/customize_datasets.md#customize-datasets-by-reorganizing-data
+https://mmsegmentation.readthedocs.io/zh-cn/main/advanced_guides/add_datasets.html
 '''
 
 # 修改config配置文件
@@ -83,13 +86,13 @@ cfg.load_from = './checkpoint/pspnet_r50-d8_512x1024_40k_cityscapes_20200605_003
 cfg.work_dir = './work_dirs/tutorial'
 
 # 训练迭代次数
-cfg.train_cfg.max_iters = int(10e3)
+cfg.train_cfg.max_iters = 1000
 # 评估模型间隔
-cfg.train_cfg.val_interval = int(1e3)
+cfg.train_cfg.val_interval = 100
 # 日志记录间隔
-cfg.default_hooks.logger.interval = int(1e3)
+cfg.default_hooks.logger.interval = 100
 # 模型权重保存间隔
-cfg.default_hooks.checkpoint.interval = int(1e3)
+cfg.default_hooks.checkpoint.interval = 100
 
 # 随机数种子
 cfg['randomness'] = dict(seed=0)
@@ -108,5 +111,3 @@ register_all_modules(init_default_scope=False)
 if __name__ == '__main__':
     runner = Runner.from_cfg(cfg)
     runner.train()
-'''
-'''

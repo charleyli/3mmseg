@@ -24,8 +24,8 @@ data_preprocessor = dict(
 data_root = './data/Glomeruli-dataset'
 dataset_type = 'StanfordBackgroundDataset'
 default_hooks = dict(
-    checkpoint=dict(by_epoch=False, interval=1000.0, type='CheckpointHook'),
-    logger=dict(interval=1000.0, log_metric_by_epoch=False, type='LoggerHook'),
+    checkpoint=dict(by_epoch=False, interval=100, type='CheckpointHook'),
+    logger=dict(interval=100, log_metric_by_epoch=False, type='LoggerHook'),
     param_scheduler=dict(type='ParamSchedulerHook'),
     sampler_seed=dict(type='DistSamplerSeedHook'),
     timer=dict(type='IterTimerHook'),
@@ -176,8 +176,7 @@ test_pipeline = [
     dict(type='LoadAnnotations'),
     dict(type='PackSegInputs'),
 ]
-train_cfg = dict(
-    max_iters=10000.0, type='IterBasedTrainLoop', val_interval=1000.0)
+train_cfg = dict(max_iters=1000, type='IterBasedTrainLoop', val_interval=100)
 train_dataloader = dict(
     batch_size=8,
     dataset=dict(
